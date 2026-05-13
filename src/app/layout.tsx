@@ -8,6 +8,7 @@ const spaceGrotesk = Space_Grotesk({ variable: "--font-space-grotesk", subsets: 
 const sora = Sora({ variable: "--font-sora", subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mbcreditconsulting.com.au"),
   title: {
     default: "MB Credit Consulting | Sydney Mortgage Broker",
     template: "%s | MB Credit Consulting",

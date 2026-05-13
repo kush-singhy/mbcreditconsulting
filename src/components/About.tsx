@@ -1,13 +1,19 @@
+import Image from "next/image";
+
 export default function About() {
   return (
     <section id="about" className="py-24 bg-[#F7F8FA] font-[family-name:var(--font-sora)]">
       <div className="mx-auto max-w-7xl px-6">
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-16 items-start">
           <div className="lg:col-span-2">
-            <div className="aspect-[3/4] bg-white border border-gray-100 relative overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center text-gray-200">
-                <svg className="w-28 h-28" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-              </div>
+            <div className="aspect-[3/4] relative overflow-hidden">
+              <Image
+                src="/images/headshot-manisha.jpeg"
+                alt="Manisha Bakshi — MFAA Accredited Mortgage Broker"
+                fill
+                className="object-cover object-top"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+              />
               <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-[#1C1C1E] to-transparent">
                 <div className="w-8 h-[2px] bg-[#119DA4] mb-3" />
                 <p className="text-white font-bold text-lg font-[family-name:var(--font-space-grotesk)]">Manisha Bakshi</p>
