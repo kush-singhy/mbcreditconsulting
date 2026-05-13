@@ -1,11 +1,18 @@
 "use client";
 
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
+
+const EMAILJS_PUBLIC_KEY = "ArVF8YS3yTM7ma6MF";
+const EMAILJS_SERVICE_ID = "service_h4vvonk";
+const EMAILJS_TEMPLATE_ID = "template_5e5i1o8";
 
 export default function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   function validate() {
     const e: Record<string, string> = {};
@@ -17,13 +24,32 @@ export default function ContactSection() {
     return e;
   }
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     const v = validate();
     setErrors(v);
-    if (Object.keys(v).length === 0) {
+    setSendError(null);
+    if (Object.keys(v).length > 0) return;
+
+    setSending(true);
+    try {
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          phone: form.phone,
+          message: form.message,
+        },
+        EMAILJS_PUBLIC_KEY
+      );
       setSubmitted(true);
       setForm({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      setSendError("Something went wrong. Please try again or call us directly.");
+    } finally {
+      setSending(false);
     }
   }
 
@@ -141,11 +167,25 @@ export default function ContactSection() {
                   />
                   {errors.message && <p className="mt-1 text-xs text-red-500">{errors.message}</p>}
                 </div>
+                {sendError && (
+                  <p className="text-xs text-red-500 font-[family-name:var(--font-sora)]">{sendError}</p>
+                )}
                 <button
                   type="submit"
-                  className="w-full bg-[#1C1C1E] text-white font-bold text-sm tracking-wider uppercase py-4 hover:bg-[#119DA4] transition-colors"
+                  disabled={sending}
+                  className="w-full bg-[#1C1C1E] text-white font-bold text-sm tracking-wider uppercase py-4 hover:bg-[#119DA4] transition-colors disabled:opacity-60 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
                 >
-                  Send Message
+                  {sending ? (
+                    <>
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                      Sending...
+                    </>
+                  ) : (
+                    "Send Message"
+                  )}
                 </button>
               </form>
             )}
